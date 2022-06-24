@@ -10,7 +10,7 @@ public interface ICardDAO extends DAO {
     Card getCardById(int id) throws SQLException;
     Card createCard(CardType type, String resource) throws SQLException;
     void deleteCardById(int id) throws SQLException;
-    boolean updateCardResource(Card card, String resource) throws SQLException;
+    void updateCardResource(Card card, String resource) throws SQLException;
     List<Card> getAllCards() throws SQLException;
     List<Card> getAllCardsByType(CardType type) throws SQLException;
 }

@@ -7,8 +7,26 @@ public class User {
     private String login;
     private String password;
     private int rate;
+    private String status;
+
 
     public User() {
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User(int userId, String login, String password, int rate, String status) {
+        this.userId = userId;
+        this.login = login;
+        this.password = password;
+        this.rate = rate;
+        this.status = status;
     }
 
     public User(int userId, String login, String password, int rate) {

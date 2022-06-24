@@ -8,10 +8,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ua.kpi.cardgame.command.ICommand;
 import ua.kpi.cardgame.command.UserOnlineCommand;
+import ua.kpi.cardgame.entities.User;
 
 import java.io.IOException;
 
-@WebServlet(name="Controller", urlPatterns = {"/register", "/login", "/logout", "/main", "/lobby", "/api/*"})
+@WebServlet(name="Controller", urlPatterns = {"/register", "/login", "/logout", "/main", "/lobby", "/api/*", "/rating", "/admin", "/usersManager", "/cardsManager", "/changeCard"})
 public class Controller extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {

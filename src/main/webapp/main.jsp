@@ -16,6 +16,7 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                 </ul> -->
+                <a id="rating_btn" type="button" class="btn btn-secondary" href="/rating">Rating</a>
                 <a id="logout_btn" type="button" class="btn btn-outline-danger" href="/logout">Logout</a>
             </div>
         </nav>

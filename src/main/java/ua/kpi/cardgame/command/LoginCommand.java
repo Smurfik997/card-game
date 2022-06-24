@@ -31,6 +31,16 @@ public class LoginCommand implements ICommand {
             if (user == null) {
                 req.setAttribute("error", "Invalid username or password");
                 return AUTH_PAGE;
+            }
+
+            if (user.getStatus() == null) {
+                req.getSession().setAttribute("user", user);
+                return MAIN_PAGE;
+            }
+
+            if (user.getStatus().equals("banned")) {
+                req.setAttribute("error", "This user is banned");
+                return AUTH_PAGE;
             } else {
                 req.getSession().setAttribute("user", user);
                 return MAIN_PAGE;

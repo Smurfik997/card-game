@@ -10,8 +10,10 @@ public interface IUserDAO extends DAO {
     User getUserByLogin(String login) throws SQLException;
     User createUser(String login, String password) throws SQLException;
     void deleteUserById(int id) throws SQLException;
-    boolean updateUserRate(User user, int rate) throws SQLException;
+    void updateUserRate(User user, int rate) throws SQLException;
     boolean updateUserPassword(User user, String password) throws SQLException;
     List<User> getAllUsers() throws SQLException;
     List<User> getUsersWithRateBetween(int from, int to) throws SQLException;
+    void banUser(int id)  throws SQLException;
+    void unbanUser(int id) throws SQLException;
 }

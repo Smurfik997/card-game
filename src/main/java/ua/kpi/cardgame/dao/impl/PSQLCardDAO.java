@@ -79,7 +79,7 @@ public class PSQLCardDAO implements ICardDAO {
     }
 
     @Override
-    public boolean updateCardResource(Card card, String resource) throws SQLException {
+    public void updateCardResource(Card card, String resource) throws SQLException {
         PreparedStatement ps = controller.getPreparedStatement(UPDATE);
         ps.setString(1, resource);
         ps.setInt(2, card.getCardId());
@@ -88,10 +88,8 @@ public class PSQLCardDAO implements ICardDAO {
 
         if (affectedRows == 1) {
             card.setResource(resource);
-            return true;
         }
 
-        return false;
     }
 
     @Override
@@ -103,7 +101,7 @@ public class PSQLCardDAO implements ICardDAO {
         while (rs.next()) {
             cards.add(new Card(
                 rs.getInt(COLUMN_ID), CardType.valueOf(rs.getString(COLUMN_TYPE).toUpperCase()),
-                rs.getString(COLUMN_TYPE)
+                rs.getString(COLUMN_RESOURCE)
             ));
         }
 

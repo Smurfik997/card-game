@@ -17,6 +17,7 @@ public class PSQLUserDAO implements IUserDAO {
     private static final String COLUMN_LOGIN = "login";
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_RATE = "rate";
+    private static final String COLUMN_STATUS = "status";
 
     private static final String SELECT = "SELECT * FROM cardGame.users";
     private static final String INSERT = "INSERT INTO cardGame.users (login, password) VALUES (?, ?)";
@@ -40,7 +41,7 @@ public class PSQLUserDAO implements IUserDAO {
         if (rs.next()) {
             user = new User(
                 rs.getInt(COLUMN_ID), rs.getString(COLUMN_LOGIN),
-                rs.getString(COLUMN_PASSWORD), rs.getInt(COLUMN_RATE)
+                rs.getString(COLUMN_PASSWORD), rs.getInt(COLUMN_RATE), rs.getString(COLUMN_STATUS)
             );
         }
 
@@ -62,7 +63,7 @@ public class PSQLUserDAO implements IUserDAO {
         if (rs.next()) {
             user = new User(
                 rs.getInt(COLUMN_ID), rs.getString(COLUMN_LOGIN),
-                rs.getString(COLUMN_PASSWORD), rs.getInt(COLUMN_RATE)
+                rs.getString(COLUMN_PASSWORD), rs.getInt(COLUMN_RATE), rs.getString(COLUMN_STATUS)
             );
         }
 
@@ -90,6 +91,16 @@ public class PSQLUserDAO implements IUserDAO {
 
         ps.close();
 
+        if (user != null) {
+            ps = controller.getPreparedStatement("INSERT INTO cardgame.user_role(user_id, role_id) VALUES (? , ?)");
+
+            ps.setInt(1, user.getUserId());
+            ps.setInt(2, 2);
+            ps.executeUpdate();
+        }
+
+        ps.close();
+
         return user;
     }
 
@@ -108,21 +119,15 @@ public class PSQLUserDAO implements IUserDAO {
         int rowsAffected = ps.executeUpdate();
         ps.close();
 
-        if (rowsAffected == 1) {
-            return true;
-        }
-
-        return false;
+        return rowsAffected == 1;
     }
 
     @Override
-    public boolean updateUserRate(User user, int rate) throws SQLException {
+    public void updateUserRate(User user, int rate) throws SQLException {
         if (updateUserField(UPDATE_RATE, user, rate)) {
             user.setRate(rate);
-            return true;
         }
 
-        return false;
     }
 
     @Override
@@ -144,7 +149,7 @@ public class PSQLUserDAO implements IUserDAO {
         while (rs.next()) {
             users.add(new User(
                 rs.getInt(COLUMN_ID), rs.getString(COLUMN_LOGIN),
-                rs.getString(COLUMN_PASSWORD), rs.getInt(COLUMN_RATE)
+                rs.getString(COLUMN_PASSWORD), rs.getInt(COLUMN_RATE), rs.getString(COLUMN_STATUS)
             ));
         }
 
@@ -163,7 +168,7 @@ public class PSQLUserDAO implements IUserDAO {
         while (rs.next()) {
             users.add(new User(
                 rs.getInt(COLUMN_ID), rs.getString(COLUMN_LOGIN),
-                rs.getString(COLUMN_PASSWORD), rs.getInt(COLUMN_PASSWORD)
+                rs.getString(COLUMN_PASSWORD), rs.getInt(COLUMN_PASSWORD), rs.getString(COLUMN_STATUS)
             ));
         }
 
@@ -171,6 +176,24 @@ public class PSQLUserDAO implements IUserDAO {
         ps.close();
 
         return users;
+    }
+
+    @Override
+    public void banUser(int id) throws SQLException {
+        PreparedStatement ps = controller.getPreparedStatement("UPDATE cardGame.users SET status = ? WHERE user_id = ?");
+        ps.setString(1, "banned");
+        ps.setInt(2, id);
+        ps.executeUpdate();
+        ps.close();
+    }
+
+    @Override
+    public void unbanUser(int id) throws SQLException {
+        PreparedStatement ps = controller.getPreparedStatement("UPDATE cardGame.users SET status = ? WHERE user_id = ?");
+        ps.setString(1, "unbanned");
+        ps.setInt(2, id);
+        ps.executeUpdate();
+        ps.close();
     }
 
     @Override

@@ -12,6 +12,7 @@ public class DAOFactory {
     private static final IUserOnlineDAO userOnlineDAO = new PSQLUserOnlineDAO();
     private static final UserGameSessionDAO userGameSessionDAO = new PSQLUserGameSessionDAO();
     private static final UserSearchGameDAO userSearchGameDAO = new PSQLUserSearchGameDAO();
+    private static final IRoleDAO roleDAO = new PSQLRoleDAO();
 
     public static EventDAO getEventDAO() {
         return eventDAO;
@@ -43,5 +44,8 @@ public class DAOFactory {
 
     public static UserSearchGameDAO getUserSearchGameDAO() {
         return userSearchGameDAO;
+    }
+    public static IRoleDAO getRoleDAO() {
+        return roleDAO;
     }
 }

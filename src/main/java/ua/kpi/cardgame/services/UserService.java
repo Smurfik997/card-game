@@ -1,6 +1,7 @@
 package ua.kpi.cardgame.services;
 
 import ua.kpi.cardgame.dao.DAOFactory;
+import ua.kpi.cardgame.dao.interfaces.IRoleDAO;
 import ua.kpi.cardgame.dao.interfaces.IUserDAO;
 import ua.kpi.cardgame.dao.interfaces.IUserOnlineDAO;
 import ua.kpi.cardgame.entities.User;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class UserService {
     public User register(String login, String password) {
@@ -91,12 +93,92 @@ public class UserService {
                             return null;
                         }
                     }).
-                    filter(user -> user != null).
+                    filter(Objects::nonNull).
                     sorted((User u1, User u2) -> u2.getRate() - u1.getRate()).toList();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return users;
+    }
+
+    public List<User> getAll() {
+        IUserDAO userDAO = DAOFactory.getUserDAO();
+        List<User> users = new ArrayList<>();
+
+        try {
+            users = userDAO.getAllUsers().stream().
+                    filter(Objects::nonNull).
+                    sorted((User u1, User u2) -> u2.getRate() - u1.getRate()).toList();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    public String getUserRole(int userId) {
+        IRoleDAO roleDAO = DAOFactory.getRoleDAO();
+        String role = null;
+
+        try {
+            role = roleDAO.getUserRole(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return role;
+    }
+
+    public boolean isAdmin(int userId) {
+        String role = getUserRole(userId);
+
+        if (role != null)
+            return !role.equals("admin");
+        return true;
+    }
+
+    public User searchByUsername(String username) {
+        IUserDAO userDAO = DAOFactory.getUserDAO();
+        User user = null;
+
+        try {
+            user = userDAO.getUserByLogin(username);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    public void promoteUser(int id) {
+        IRoleDAO roleDAO = DAOFactory.getRoleDAO();
+
+        try {
+            roleDAO.promoteUser(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void banUser(int id) {
+        IUserDAO userDAO = DAOFactory.getUserDAO();
+
+        try {
+            userDAO.banUser(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unbanUser(int id) {
+        IUserDAO userDAO = DAOFactory.getUserDAO();
+
+        try {
+            userDAO.unbanUser(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
